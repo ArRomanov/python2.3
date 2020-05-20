@@ -1,35 +1,27 @@
 def calculate_notation():
     notation = input("Введите выражение польской нотации:\n")
-    chars = notation.split(' ')
-    operators = [char for char in chars if char and not char.isdigit()]
-    assert operators[-1] in ('+', '-', '*', '/'), 'Первый оператор не является одним из множества +, -, *, /'
-    nums = [int(char) for char in chars if char.isdigit()]
-    assert len(nums) - len(operators) == 1, f'Количество операторов и цифр не соответствует. Цифр - {len(nums)}, операторов - {len(operators)}'
-
-    result = nums.pop(0)
+    chars = notation.strip().split(' ')
+    operator = chars.pop(0)
+    nums = chars.copy()
+    assert len(operator) + len(nums) == 3, 'Количество введенных символов отличается от 3'
+    assert operator in ('+', '-', '*', '/'), f'Первый оператор "{operator}" не является одним из множества +, -, *, /'
     try:
-        for operator in reversed(operators):
-            second_num = nums.pop(0)
-            if operator == '+':
-                result += second_num
-                continue
-            elif operator == '-':
-                result -= second_num
-                continue
-            elif operator == '*':
-                result *= second_num
-                continue
-            elif operator == '/':
-                result /= second_num
-                continue
-            else:
-                raise AssertionError(f'Данный оператор не обрабатывается - "{operator}"')
-    except ZeroDivisionError:
-        print('На ноль делить нельзя')
-        exit()
-    except TypeError as ex:
-        print(f'Недопустимое действие c переменной - {ex}')
-        exit()
+        nums = [int(nums[0]), int(nums[1])]
+    except ValueError:
+        print('Проблема с преобразованием символа в число')
+
+    if operator == '+':
+        result = nums[0] + nums[1]
+    elif operator == '-':
+        result = nums[0] - nums[1]
+    elif operator == '*':
+        result = nums[0] * nums[1]
+    elif operator == '/':
+        try:
+            result = nums[0] / nums[1]
+        except TypeError:
+            print('Строки нельзя делить')
+            exit()
     print(result)
 
 
